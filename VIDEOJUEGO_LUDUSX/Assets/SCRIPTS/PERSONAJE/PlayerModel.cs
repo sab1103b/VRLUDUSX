@@ -2,8 +2,12 @@ using UnityEngine;
 
 public class PlayerModel : MonoBehaviour
 {
+    [Header("Lives")]
     public int maxLives = 3;
     public int currentLives;
+
+    [Header("Collectibles")]
+    public int posterFragments = 0;
 
     void Awake()
     {
@@ -19,4 +23,12 @@ public class PlayerModel : MonoBehaviour
 
         Debug.Log("Vidas restantes: " + currentLives);
     }
+
+    public void AddFragment()
+    {
+        posterFragments++;
+
+        Debug.Log("Fragmentos recolectados: " + posterFragments);
+    }
+
 }
