@@ -3,6 +3,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 public class LoadtoLV : MonoBehaviour
 {
+    public FadeController fade;
     void Start()
     {
         StartCoroutine(LoadLevel());
@@ -11,6 +12,6 @@ public class LoadtoLV : MonoBehaviour
     IEnumerator LoadLevel()
     {
         yield return new WaitForSeconds(10f);
-        SceneManager.LoadScene("Level_01");
+        StartCoroutine(fade.FadeOut("Level_01"));
     }
 }
