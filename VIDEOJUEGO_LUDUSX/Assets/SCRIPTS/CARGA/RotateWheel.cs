@@ -6,11 +6,14 @@ public class FolletoWheel : MonoBehaviour
     public GameObject[] folletos;     
 
     public float radius = 3f;         
-    public float rotationSpeed = 20f; 
+    public float rotationSpeed = 20f;
+
+    public Material hologramMaterial;
 
     void Start()
     {
         PositionFolletos();
+        CheckUnlocked();
     }
 
     void Update()
@@ -49,6 +52,23 @@ public class FolletoWheel : MonoBehaviour
 
             folletos[i].transform.SetParent(transform);
             folletos[i].transform.localPosition = pos;
+        }
+    }
+
+    void CheckUnlocked()
+    {
+        for (int i = 0; i < folletos.Length; i++)
+        {
+            FolletoItem item = folletos[i].GetComponent<FolletoItem>();
+
+            if (item == null) continue;
+
+            Renderer r = folletos[i].GetComponent<Renderer>();
+
+            if (!CollectionManager.instance.collectedFolletos.Contains(item.folletoID))
+            {
+                r.material = hologramMaterial;
+            }
         }
     }
 }
