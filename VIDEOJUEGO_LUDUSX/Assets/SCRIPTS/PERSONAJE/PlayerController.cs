@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
     {
         canTakeDamage = true;
     }
-
+    /*
     void Update()
     {
         // Botón del control VR (trigger derecho o tecla E para pruebas)
@@ -64,4 +64,5 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
+    */
 }
