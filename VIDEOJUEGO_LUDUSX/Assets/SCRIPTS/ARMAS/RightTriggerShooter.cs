@@ -4,48 +4,62 @@ using UnityEngine.InputSystem;
 
 public class RightTriggerShooter : MonoBehaviour
 {
+    [Header("Input")]
+    [SerializeField] private InputActionReference fireAction; // Asigna Controller/Trigger Press
+
     [Header("Disparo")]
-    public GameObject bulletPrefab;
-    public Transform muzzleTransform;
-    public float bulletSpeed = 20f;
-    public float fireRate = 0.15f;
-    public float spawnOffset = 0.1f;
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private float bulletSpeed = 20f;
+    [SerializeField] private float fireRate = 0.15f;
+    [SerializeField] private float spawnOffset = 0.1f;
 
     [Header("Cooldown")]
-    public int maxShots = 30;
-    public float cooldownTime = 8f;
+    [SerializeField] private int maxShots = 30;
+    [SerializeField] private float cooldownTime = 8f;
 
-    private InputAction triggerAction;
+    [Header("Referencia al arma")]
+    [SerializeField] private WeaponEquipRightVR weaponEquip;
+
     private float nextFireTime = 0f;
     private int shotsFired = 0;
     private bool isCoolingDown = false;
 
-    private void Awake()
-    {
-        triggerAction = new InputAction(
-            name: "RightTrigger",
-            type: InputActionType.Value,
-            binding: "<XRController>{RightHand}/trigger"
-        );
-    }
-
     private void OnEnable()
     {
-        triggerAction.Enable();
+        if (fireAction != null && fireAction.action != null)
+            fireAction.action.Enable();
     }
 
     private void OnDisable()
     {
-        triggerAction.Disable();
+        if (fireAction != null && fireAction.action != null)
+            fireAction.action.Disable();
     }
 
     private void Update()
     {
-        if (isCoolingDown) return;
+        if (weaponEquip == null)
+        {
+            Debug.LogWarning("RightTriggerShooter: falta asignar WeaponEquipRightVR");
+            return;
+        }
 
-        float triggerValue = triggerAction.ReadValue<float>();
+        if (!weaponEquip.HasWeapon())
+            return;
 
-        if (triggerValue > 0.1f && Time.time >= nextFireTime)
+        if (isCoolingDown)
+            return;
+
+        if (fireAction == null || fireAction.action == null)
+        {
+            Debug.LogWarning("RightTriggerShooter: falta asignar Fire Action");
+            return;
+        }
+
+        if (Time.time < nextFireTime)
+            return;
+
+        if (fireAction.action.WasPressedThisFrame())
         {
             if (shotsFired < maxShots)
             {
@@ -54,18 +68,24 @@ public class RightTriggerShooter : MonoBehaviour
                 nextFireTime = Time.time + fireRate;
 
                 if (shotsFired >= maxShots)
-                {
                     StartCoroutine(CooldownRoutine());
-                }
             }
         }
     }
 
     private void Shoot()
     {
-        if (bulletPrefab == null || muzzleTransform == null)
+        if (bulletPrefab == null)
         {
-            Debug.LogWarning("Falta bulletPrefab o muzzleTransform");
+            Debug.LogWarning("RightTriggerShooter: no hay bulletPrefab asignado");
+            return;
+        }
+
+        Transform muzzleTransform = weaponEquip.GetMuzzle();
+
+        if (muzzleTransform == null)
+        {
+            Debug.LogWarning("RightTriggerShooter: no hay muzzle asignado en el arma");
             return;
         }
 
@@ -74,9 +94,14 @@ public class RightTriggerShooter : MonoBehaviour
 
         GameObject bullet = Instantiate(bulletPrefab, spawnPos, spawnRot);
 
-        if (bullet.TryGetComponent<Rigidbody>(out Rigidbody rb))
+        Rigidbody bulletRb = bullet.GetComponent<Rigidbody>();
+        if (bulletRb != null)
         {
-            rb.linearVelocity = muzzleTransform.forward * bulletSpeed;
+            bulletRb.linearVelocity = muzzleTransform.forward * bulletSpeed;
+        }
+        else
+        {
+            Debug.LogWarning("RightTriggerShooter: la bala no tiene Rigidbody");
         }
     }
 

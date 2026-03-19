@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8135960093565745731}
   - component: {fileID: -4096904097623222466}
   - component: {fileID: 8121103413061097661}
+  - component: {fileID: -572886457095772217}
   m_Layer: 0
   m_Name: Bala
   m_TagString: Untagged
@@ -127,7 +128,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Bullet
   lifeTime: 4
-  destroyAfterHit: 0.5
 --- !u!54 &8121103413061097661
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -155,3 +155,24 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!135 &-572886457095772217
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8632448482832301897}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
