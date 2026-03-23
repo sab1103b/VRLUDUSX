@@ -78,35 +78,54 @@ public class PATRONES : MonoBehaviour
 
         timer += Time.deltaTime;
 
+        Vector3 previousPosition = transform.position;
+        Vector3 targetPosition = transform.position;
+
         switch (pattern)
         {
             case MovementPattern.Oscilante:
-                transform.position = Oscilante();
+                targetPosition = Oscilante();
                 break;
 
             case MovementPattern.PicadaCurva:
-                transform.position = PicadaCurva();
+                targetPosition = PicadaCurva();
                 break;
 
             case MovementPattern.Cazador:
-                transform.position = Cazador();
+                targetPosition = Cazador();
                 break;
 
             case MovementPattern.ZigZag:
-                transform.position = ZigZag();
+                targetPosition = ZigZag();
                 break;
 
             case MovementPattern.Rodeo:
-                transform.position = Rodeo();
+                targetPosition = Rodeo();
                 break;
+        }
+
+        // APLICAR MOVIMIENTO
+        transform.position = targetPosition;
+
+        // ROTACIÓN HACIA MOVIMIENTO
+        Vector3 moveDir = (transform.position - previousPosition);
+
+        if (moveDir.sqrMagnitude > 0.0001f)
+        {
+            moveDir.y = 0; // evita inclinación rara en VR
+
+            Quaternion targetRot = Quaternion.LookRotation(moveDir) * Quaternion.Euler(0, 180f, 0);
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRot,
+                6f * Time.deltaTime
+            );
         }
 
         ApplyLimits();
     }
-
-    // ==========================
     // PATRONES
-    // ==========================
 
     Vector3 Oscilante()
     {

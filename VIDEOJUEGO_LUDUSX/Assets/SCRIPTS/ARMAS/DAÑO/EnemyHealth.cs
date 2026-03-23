@@ -25,6 +25,6 @@ public class EnemyHealth : MonoBehaviour, IDamageable
     private void Die()
     {
         Debug.Log(gameObject.name + " murió");
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

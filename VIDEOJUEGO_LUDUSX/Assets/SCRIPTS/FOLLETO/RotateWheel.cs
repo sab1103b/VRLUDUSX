@@ -31,7 +31,7 @@ public class FolletoWheel : MonoBehaviour
             if (folleto == null) continue;
 
             folleto.transform.LookAt(player);
-            folleto.transform.Rotate(0, 90, -90);
+            folleto.transform.Rotate(0, 90, 90);
         }
     }
 
